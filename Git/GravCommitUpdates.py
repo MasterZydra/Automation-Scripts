@@ -10,6 +10,15 @@ The following features are implemented:
 - Creating a separate commit for each plugin with the version info in the
   commit message
 - Pushing the commits in the end
+
+Requirements:
+- A Git repo must exist in the directory of the Grav source code
+- Git must be usable via the terminal
+
+Usage:
+To add a folder to the script add a new block to the main function:
+  os.chdir('/path/to/your/folder')
+  commitGravUpdates()
 """
 
 import subprocess
