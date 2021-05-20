@@ -39,13 +39,27 @@ def main():
 # Helper functions
 # ----------------
 def commitGravUpdates():
+    push = False
+
     print('\n📁' + os.getcwd())
-    output = getChangedFiles()
-    plugins = getChangedPluginList(output)
+    changedFiles = getChangedFiles()
+
+    # Commit all Grav system files
+    gravSys = getGravSystemList(changedFiles)
+    if len(gravSys) == 0:
+        print('  No changes in Grav system')
+    else:
+        commitGravSystemChanges(gravSys)
+        push = True
+
+    # Commit all Grav plugins
+    plugins = getChangedPluginList(changedFiles)
     if len(plugins) == 0:
-        print('  No changed plugins')
-        return
-    commitPluginChanges(plugins)
+        print('  No changes in plugins')
+    else:
+        commitPluginChanges(plugins)
+        push = True
+    
     if push:
         if manualCheckBeforePush:
             input("Check if commit message is correct")
