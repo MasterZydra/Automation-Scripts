@@ -19,6 +19,9 @@ Usage:
 To add a folder to the script add a new block to the main function:
   os.chdir('/path/to/your/folder')
   commitGravUpdates()
+
+Than start the script e.g. via terminal:
+    ▶ python3 Git/GravCommitUpdates.py
 """
 
 import subprocess
