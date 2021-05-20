@@ -70,14 +70,21 @@ def getChangedPluginList(output: list[str]) -> list[str]:
             plugins.append(plugin)
     return removeListDuplicates(plugins)
 
+def getVersionNumber(path: str) -> str:
+    with open(path + '/CHANGELOG.md') as f:
+        firstLine = f.readline().replace('# ', '').replace('\n', '')
+    if not firstLine.startswith('v') or not firstLine.count('.') == 2:
+        print('Could not extract version info: ' + firstLine)
+        return ''
+    else:
+        return firstLine
+
 def commitPluginChanges(plugins: list[str]):
     for plugin in plugins:
         # Get current version of plugin
-        with open('user/plugins/' + plugin + '/CHANGELOG.md') as f:
-            pluginVersion = f.readline().replace('# ', '').replace('\n', '')
-            if not pluginVersion.startswith('v') or not pluginVersion.count('.') == 2:
-                print('Wrong version info: ' + pluginVersion)
-                break
+        pluginVersion = getVersionNumber('user/plugins/' + plugin)
+        if pluginVersion == '':
+            break
 
         # Add plugins files to staged list
         output = gitAdd('user/plugins/' + plugin)
