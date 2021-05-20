@@ -87,7 +87,6 @@ def commitPluginChanges(plugins: list[str]):
         # Commit staged list
         output = gitCommit('Update plugin "' + plugin + '" to ' + pluginVersion)
         print(output)
-        input("Check if commit message is correct")
 
 def gitAdd(file: str) -> str:
     cmd = [ 'git', 'add', file]
