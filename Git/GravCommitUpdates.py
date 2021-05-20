@@ -81,9 +81,9 @@ def getChangedFiles() -> list[str]:
 
 def getChangedPluginList(changedFiles: list[str]) -> list[str]:
     plugins = []
-    for o in output:
-        if o.startswith('user/plugins'):
-            plugin = o.replace('user/plugins/', '')
+    for f in changedFiles:
+        if f.startswith('user/plugins'):
+            plugin = f.replace('user/plugins/', '')
             plugin = plugin.split('/', 1)[0]
             plugins.append(plugin)
     return removeListDuplicates(plugins)
