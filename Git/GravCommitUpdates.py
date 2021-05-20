@@ -68,9 +68,7 @@ def getChangedPluginList(output: list[str]) -> list[str]:
             plugin = o.replace('user/plugins/', '')
             plugin = plugin.split('/', 1)[0]
             plugins.append(plugin)
-    # Remove duplicates
-    plugins = list(dict.fromkeys(plugins))
-    return plugins
+    return removeListDuplicates(plugins)
 
 def commitPluginChanges(plugins: list[str]):
     for plugin in plugins:
@@ -100,6 +98,9 @@ def gitPush():
     output = subprocess.Popen( cmd, stdout=subprocess.PIPE ).communicate()[0]
     output = output.decode('utf-8')
     print(output)
+
+def removeListDuplicates(l: list) -> list:
+    return list(dict.fromkeys(l))
 
 if __name__=="__main__":
    main()
