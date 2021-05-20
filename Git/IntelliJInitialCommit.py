@@ -33,9 +33,6 @@ def commitIntelliJProject():
     print('\n📁' + os.getcwd())
     changedFiles = getChangedFiles()
 
-    for f in changedFiles:
-        print(f)
-
     addAndCommit(changedFiles, '.gitignore', 'Add gitignore')
     addAndCommit(changedFiles, '.idea/', 'Add IntelliJ project')
     
