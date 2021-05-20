@@ -24,6 +24,11 @@ To add a folder to the script add a new block to the main function:
 import subprocess
 import os
 
+# Configuration area
+# ------------------
+# Script will wait for user input to confirm pushing to remote
+manualCheckBeforePush = True
+
 def main():
     os.chdir('/my/path/to/grav/source/code')
     commitGravUpdates()
@@ -41,7 +46,10 @@ def commitGravUpdates():
         print('  No changed plugins')
         return
     commitPluginChanges(plugins)
-    gitPush()
+    if push:
+        if manualCheckBeforePush:
+            input("Check if commit message is correct")
+        gitPush()
 
 def getChangedFiles() -> list[str]:
     cmd = [ 'git', 'status', '-s']
