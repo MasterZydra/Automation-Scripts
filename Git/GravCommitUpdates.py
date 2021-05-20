@@ -80,16 +80,23 @@ def commitPluginChanges(plugins: list[str]):
                 break
 
         # Add plugins files to staged list
-        cmd = [ 'git', 'add', 'user/plugins/' + plugin]
-        output = subprocess.Popen( cmd, stdout=subprocess.PIPE ).communicate()[0]
-        output = output.decode('utf-8')
+        output = gitAdd('user/plugins/' + plugin)
         if output != '':
-            print('Error adding plugin "' + plugin + '": ' + output)
+            print(output)
 
         # Commit staged list
         output = gitCommit('Update plugin "' + plugin + '" to ' + pluginVersion)
         print(output)
         input("Check if commit message is correct")
+
+def gitAdd(file: str) -> str:
+    cmd = [ 'git', 'add', file]
+    output = subprocess.Popen( cmd, stdout=subprocess.PIPE ).communicate()[0]
+    output = output.decode('utf-8')
+    if output != '':
+        return 'Error adding "' + file + '": ' + output
+    else:
+        return output
 
 def gitCommit(message: str) -> str:
     cmd = [ 'git', 'commit', '-m', message]
