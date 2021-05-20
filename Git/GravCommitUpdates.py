@@ -70,6 +70,17 @@ def getChangedPluginList(output: list[str]) -> list[str]:
             plugins.append(plugin)
     return removeListDuplicates(plugins)
 
+def getGravSystemList(changedFiles: list[str]) -> list[str]:
+    files = []
+    for f in changedFiles:
+        # Add system directories
+        if f.startswith('vendor/') or f.startswith('system/'):
+            files.append(f[:f.find('/')])
+        # Add root files and config files
+        if f.count('/') == 0 or f.startswith('user/config/'):
+            files.append(f)
+    return removeListDuplicates(files)
+
 def getVersionNumber(path: str) -> str:
     with open(path + '/CHANGELOG.md') as f:
         firstLine = f.readline().replace('# ', '').replace('\n', '')
@@ -78,6 +89,21 @@ def getVersionNumber(path: str) -> str:
         return ''
     else:
         return firstLine
+
+def commitGravSystemChanges(changedFiles: list[str]):
+    for f in changedFiles:
+        output = gitAdd(f)
+        if output != '':
+            print(output)
+    
+    # Get current version of plugin
+    gravVersion = getVersionNumber('.')
+    if gravVersion == '':
+        return
+
+    # Commit staged list
+    output = gitCommit('Update Grav to ' + gravVersion)
+    print(output)
 
 def commitPluginChanges(plugins: list[str]):
     for plugin in plugins:
