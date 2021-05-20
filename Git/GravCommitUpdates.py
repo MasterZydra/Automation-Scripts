@@ -69,13 +69,17 @@ def getChangedFiles() -> list[str]:
     cmd = [ 'git', 'status', '-s']
     output = subprocess.Popen( cmd, stdout=subprocess.PIPE ).communicate()[0]
     output = output.decode('utf-8').split('\n')
+
     # Remove first characters to get only the file names
     for i in range(len(output)):
         output[i] = output[i][3:]
-    return output
 
-def getChangedPluginList(output: list[str]) -> list[str]:
-    # Get changed plugin list
+    # Remove empty string entry
+    if output[len(output) - 1] == '':
+        output.pop(len(output) - 1)
+    return removeListDuplicates(output)
+
+def getChangedPluginList(changedFiles: list[str]) -> list[str]:
     plugins = []
     for o in output:
         if o.startswith('user/plugins'):
