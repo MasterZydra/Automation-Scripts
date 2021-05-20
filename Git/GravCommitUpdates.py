@@ -87,11 +87,15 @@ def commitPluginChanges(plugins: list[str]):
             print('Error adding plugin "' + plugin + '": ' + output)
 
         # Commit staged list
-        cmd = [ 'git', 'commit', '-m', 'Update plugin "' + plugin + '" to ' + pluginVersion]
-        output = subprocess.Popen( cmd, stdout=subprocess.PIPE ).communicate()[0]
-        output = output.decode('utf-8')
+        output = gitCommit('Update plugin "' + plugin + '" to ' + pluginVersion)
         print(output)
         input("Check if commit message is correct")
+
+def gitCommit(message: str) -> str:
+    cmd = [ 'git', 'commit', '-m', message]
+    output = subprocess.Popen( cmd, stdout=subprocess.PIPE ).communicate()[0]
+    output = output.decode('utf-8')
+    return output
 
 def gitPush():
     cmd = [ 'git', 'push']
