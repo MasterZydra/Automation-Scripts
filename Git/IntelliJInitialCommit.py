@@ -15,16 +15,34 @@ Requirements:
 - Git must be usable via the terminal
 
 Usage:
-To add a folder to the script add a new block to the main function:
-    os.chdir('/my/path/to/grav/source/code')
-    commitIntelliJProject()
+IntelliJInitialCommit.py [-h] path
+
+Create commits for the initial commits of a new IntelliJ project
+
+positional arguments:
+  path        path to the Grav source code directory
+
+optional arguments:
+  -h, --help  show this help message and exit
+
+e.g.
+▶ python3 IntelliJInitialCommit.py /path/to/your/folder
 """
 
+import argparse
 import subprocess
 import os
 
 def main():
-    os.chdir('/my/path/to/grav/source/code')
+    parser = argparse.ArgumentParser(description='Create commits for the initial commits of a new IntelliJ project')
+    parser.add_argument('path', type=str, help='path to the Grav source code directory')
+    args = parser.parse_args()
+
+    if not os.path.isdir(args.path):
+        print('Failed: "' + args.path + '" is not a valid path')
+        exit()
+
+    os.chdir(args.path)
     commitIntelliJProject()
 
 # Helper functions
