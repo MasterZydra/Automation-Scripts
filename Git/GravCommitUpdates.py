@@ -6,24 +6,31 @@ Author: David Hein
 This script can be used to commit updates on Grav to the Git repository.
 
 The following features are implemented:
-- Sequencial processing of multiple Grav source code repos
+- Processing of only one Grav source code repo
 - Creating a separate commit for each plugin with the version info in the
   commit message
-- Pushing the commits in the end
+- Optional pushing of the commits in the end
 
 Requirements:
 - A Git repo must exist in the directory of the Grav source code
 - Git must be usable via the terminal
 
 Usage:
-To add a folder to the script add a new block to the main function:
-  os.chdir('/path/to/your/folder')
-  commitGravUpdates()
+GravCommitUpdates.py [-h] [-autopush AUTOPUSH] path
 
-Than start the script e.g. via terminal:
-    ▶ python3 Git/GravCommitUpdates.py
+positional arguments:
+  path                path to the Grav source code directory
+
+optional arguments:
+  -h, --help          show this help message and exit
+  -autopush AUTOPUSH  automatically push the commits after creating them (default: False)
+
+e.g.
+▶ python3 GravCommitUpdates.py /path/to/your/folder
+▶ python3 GravCommitUpdates.py -autopush True /path/to/your/folder
 """
 
+import argparse
 import subprocess
 import os
 
@@ -31,12 +38,22 @@ import os
 # ------------------
 # Script will wait for user input to confirm pushing to remote
 manualCheckBeforePush = True
+autopush = False
 
 def main():
-    os.chdir('/my/path/to/grav/source/code')
-    commitGravUpdates()
+    parser = argparse.ArgumentParser(description='Create commits for the system and plugin updates')
+    parser.add_argument('path', type=str, help='path to the Grav source code directory')
+    parser.add_argument('-autopush', type=bool, help='automatically push the commits after creating them (default: False)', default=False)
+    args = parser.parse_args()
 
-    os.chdir('/my/path/to/grav/source/code2')
+    if not os.path.isdir(args.path):
+        print('Failed: "' + args.path + '" is not a valid path')
+        exit()
+    
+    global autopush
+    autopush = args.autopush
+
+    os.chdir(args.path)
     commitGravUpdates()
 
 # Helper functions
@@ -63,7 +80,9 @@ def commitGravUpdates():
         commitPluginChanges(plugins)
         push = True
     
-    if push:
+    global autopush
+    print('autopush: ' + str(autopush))
+    if push and autopush:
         if manualCheckBeforePush:
             input("Check if commit message is correct")
         gitPush()
