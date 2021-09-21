@@ -81,7 +81,6 @@ def commitGravUpdates():
         push = True
     
     global autopush
-    print('autopush: ' + str(autopush))
     if push and autopush:
         if manualCheckBeforePush:
             input("Check if commit message is correct")
