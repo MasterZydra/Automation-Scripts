@@ -123,7 +123,7 @@ def getGravSystemList(changedFiles: list[str]) -> list[str]:
 def getVersionNumber(path: str) -> str:
     with open(path + '/CHANGELOG.md') as f:
         firstLine = f.readline().replace('# ', '').replace('\n', '')
-    if not firstLine.startswith('v') or not firstLine.count('.') == 2:
+    if not firstLine.startswith('v') or not firstLine.count('.') in [2, 3]:
         print('Could not extract version info: ' + firstLine)
         return ''
     else:
