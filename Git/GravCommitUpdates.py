@@ -116,7 +116,8 @@ def getGravSystemList(changedFiles: list[str]) -> list[str]:
         if f.startswith('vendor/') or f.startswith('system/'):
             files.append(f[:f.find('/')])
         # Add root files and config files
-        if f.count('/') == 0 or f.startswith('user/config/'):
+        if f.count('/') == 0 or f.startswith('user/config/') or \
+            f.startswith('bin/') or f.startswith('webserver-configs/'):
             files.append(f)
     return removeListDuplicates(files)
 
