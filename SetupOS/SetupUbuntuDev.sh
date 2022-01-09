@@ -18,6 +18,9 @@ install_basic_tools=true
     install_apache2=true
     # Version control
     install_git=true
+    # Database
+    install_mariaDB=true
+    setup_mariaDB=true
 
 # PHP
 install_php=true
@@ -52,6 +55,43 @@ if $install_basic_tools ; then
         
         echo "> sudo apt-get -y install git" >> /var/log/setupOS.log
         sudo apt-get -y install git >> /var/log/setupOS.log
+    fi
+
+    if $install_mariaDB ; then
+        echo "    Installing MariaDB ..."
+        echo "----------------------------------" >> /var/log/setupOS.log
+        echo "Installing MariaDB ..." >> /var/log/setupOS.log
+        
+        echo "> sudo apt-get -y install mariadb-server" >> /var/log/setupOS.log
+        sudo apt-get -y install mariadb-server >> /var/log/setupOS.log
+    fi
+
+    if $setup_mariaDB ; then
+        echo "    Configuring MariaDB ..."
+        echo "----------------------------------" >> /var/log/setupOS.log
+        echo "Configuring MariaDB ..." >> /var/log/setupOS.log
+
+        echo "> Creating database setup script" >> /var/log/setupOS.log
+        echo "-- Delete anonymous users" > mysql_secure_installation.sql
+        echo "DELETE FROM mysql.user WHERE User='';" >> mysql_secure_installation.sql
+        echo "-- Change password of root user to fix 'Access denied' error" >> mysql_secure_installation.sql
+        echo "SET password for 'root'@'localhost' = password('toor');" >> mysql_secure_installation.sql
+        echo "-- Ensure the root user can not log in remotely" >> mysql_secure_installation.sql
+        echo "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');" >> mysql_secure_installation.sql
+        echo "-- Remove the test database" >> mysql_secure_installation.sql
+        echo "DROP DATABASE IF EXISTS test;" >> mysql_secure_installation.sql
+        echo "DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%';" >> mysql_secure_installation.sql
+        echo "-- Flush the privileges tables" >> mysql_secure_installation.sql
+        echo "FLUSH PRIVILEGES;" >> mysql_secure_installation.sql
+
+        echo "> mysql -sfu root < mysql_secure_installation.sql" >> /var/log/setupOS.log
+        sudo mysql -sfu root < mysql_secure_installation.sql >> /var/log/setupOS.log
+
+        echo "> rm mysql_secure_installation.sql" >> /var/log/setupOS.log
+        rm mysql_secure_installation.sql >> /var/log/setupOS.log
+
+        echo "> sudo systemctl restart mariadb" >> /var/log/setupOS.log
+        sudo systemctl restart mariadb >> /var/log/setupOS.log
     fi
 
     echo ""
