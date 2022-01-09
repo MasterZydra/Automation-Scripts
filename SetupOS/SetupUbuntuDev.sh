@@ -7,12 +7,22 @@ echo ""
 # Configuration
 # -------------
 
+# Using apache2 as web server
+# This setting changes which packages are installed.
+# E.g. for PHP
+using_apache2=true
+
 # Basic tools
 install_basic_tools=true
     # Web server
     install_apache2=true
     # Version control
     install_git=true
+
+# PHP
+install_php=true
+    # PHP 8.1
+    install_php8_1=true
 
 # Developer tools
 install_dev_tools=true
@@ -46,6 +56,44 @@ if $install_basic_tools ; then
 
     echo ""
 fi
+
+if $install_php ; then
+    # Source: https://de.linuxcapable.com/how-to-install-php-8-1-on-ubuntu-20-04/
+    echo "Installing PHP ..."
+    echo "----------------------------------" >> /var/log/setupOS.log
+    echo "Installing PHP ..." >> /var/log/setupOS.log
+    
+    echo "Install dependencies ..." >> /var/log/setupOS.log
+        
+    echo "> sudo apt-get -y install software-properties-common" >> /var/log/setupOS.log
+    sudo apt-get -y install software-properties-common >> /var/log/setupOS.log
+
+    echo "> sudo add-apt-repository ppa:ondrej/php -y" >> /var/log/setupOS.log
+    sudo add-apt-repository ppa:ondrej/php -y >> /var/log/setupOS.log
+
+    if $install_php8_1 ; then
+        # Source : https://de.linuxcapable.com/how-to-install-php-8-1-on-ubuntu-20-04/
+        echo "    Installing PHP 8.1"
+        echo "----------------------------------" >> /var/log/setupOS.log
+        echo "Installing PHP 8.1 ..." >> /var/log/setupOS.log
+
+        echo "> sudo apt-get -y install php8.1" >> /var/log/setupOS.log
+        sudo apt-get -y install php8.1 >> /var/log/setupOS.log
+
+        if $using_apache2 ; then
+            echo "> sudo apt-get -y install libapache2-mod-php8.1" >> /var/log/setupOS.log
+            sudo apt-get -y install libapache2-mod-php8.1 >> /var/log/setupOS.log
+
+            echo "> sudo systemctl restart apache2" >> /var/log/setupOS.log
+            sudo systemctl restart apache2 >> /var/log/setupOS.log
+        fi
+    fi
+
+    echo ""
+fi
+install_php=true
+    # PHP 8.1
+    install_php8_1=true
 
 if $install_dev_tools ; then
     echo "Installing developer tools ..."
