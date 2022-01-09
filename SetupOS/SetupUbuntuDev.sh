@@ -20,7 +20,7 @@ install_basic_tools=true
     install_git=true
     # Database
     install_mariaDB=true
-    setup_mariaDB=true
+    setup_mariaDB=true # Default User "root", Default Password: "toor"
 
 # PHP
 install_php=true
