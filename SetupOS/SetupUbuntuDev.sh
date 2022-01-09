@@ -9,11 +9,16 @@ echo ""
 
 # Basic tools
 install_basic_tools=true
+    # Version control
     install_git=true
 
 # Developer tools
 install_dev_tools=true
+    # Color picker
+    install_gpick=true
+    # MySQL client
     install_heidiSQL=true
+    # Text editor
     install_vscode=true
 
 if $install_basic_tools ; then
@@ -33,7 +38,17 @@ fi
 
 if $install_dev_tools ; then
     echo "Installing developer tools ..."
-    
+
+    if $install_gpick ; then
+        # Source: https://zoomadmin.com/HowToInstall/UbuntuPackage/gpick
+        echo "    Installing Gpick"
+        echo "----------------------------------" >> /var/log/setupOS.log
+        echo "Installing Gpick ..." >> /var/log/setupOS.log
+        
+        echo "> sudo apt-get -y install gpick" >> /var/log/setupOS.log
+        sudo apt-get -y install gpick >> /var/log/setupOS.log
+    fi
+
     if $install_heidiSQL ; then
         # Source: https://snapcraft.io/install/heidisql-wine/ubuntu
         echo "    Installing HeidiSQL ..."
