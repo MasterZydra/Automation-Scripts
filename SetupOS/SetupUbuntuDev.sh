@@ -9,6 +9,8 @@ echo ""
 
 # Basic tools
 install_basic_tools=true
+    # Web server
+    install_apache2=true
     # Version control
     install_git=true
 
@@ -23,6 +25,15 @@ install_dev_tools=true
 
 if $install_basic_tools ; then
     echo "Installing basic tools ..."
+
+    if $install_apache2 ; then
+        echo "    Installing Apache2"
+        echo "----------------------------------" >> /var/log/setupOS.log
+        echo "Installing Apache2 ..." >> /var/log/setupOS.log
+
+        echo "> sudo apt-get -y install apache2" >> /var/log/setupOS.log
+        sudo apt-get -y install apache2 >> /var/log/setupOS.log
+    fi
 
     if $install_git ; then
         echo "    Installing Git ..."
