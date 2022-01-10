@@ -131,9 +131,6 @@ if $install_php ; then
 
     echo ""
 fi
-install_php=true
-    # PHP 8.1
-    install_php8_1=true
 
 if $install_dev_tools ; then
     echo "Installing developer tools ..."
