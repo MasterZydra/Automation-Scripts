@@ -13,16 +13,13 @@
 
 trigger:
 - main
+# or
+# trigger: none
+
+# To run the pipeline scheduled use the trigger settings of the pipeline in the web frontend
 
 pool:
   vmImage: ubuntu-latest
-
-schedules:
-- cron: "0 6 * * *"
-  displayName: Daily Dependabot run
-  branches:
-    include:
-    - main
 
 steps:
 - script: |
