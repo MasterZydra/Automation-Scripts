@@ -122,6 +122,9 @@ def getGravSystemList(changedFiles: list[str]) -> list[str]:
     return removeListDuplicates(files)
 
 def getVersionNumber(path: str) -> str:
+    if not os.path.isfile(path + '/CHANGELOG.md'):
+        print(f'CHANGELOG.md not found in {path}')
+        return ''
     with open(path + '/CHANGELOG.md') as f:
         firstLine = f.readline().replace('# ', '').replace('\n', '')
     if not firstLine.startswith('v') or not firstLine.count('.') in [2, 3]:
@@ -149,8 +152,6 @@ def commitPluginChanges(plugins: list[str]):
     for plugin in plugins:
         # Get current version of plugin
         pluginVersion = getVersionNumber('user/plugins/' + plugin)
-        if pluginVersion == '':
-            break
 
         # Add plugins files to staged list
         output = gitAdd('user/plugins/' + plugin)
@@ -158,8 +159,13 @@ def commitPluginChanges(plugins: list[str]):
             print(output)
 
         # Commit staged list
-        output = gitCommit('Update plugin "' + plugin + '" to ' + pluginVersion)
-        print(output)
+
+        if pluginVersion == '':
+            output = gitCommit('Update plugin "' + plugin + '"')
+            print(output)
+        else:
+            output = gitCommit('Update plugin "' + plugin + '" to ' + pluginVersion)
+            print(output)
 
 def gitAdd(file: str) -> str:
     cmd = [ 'git', 'add', file]
